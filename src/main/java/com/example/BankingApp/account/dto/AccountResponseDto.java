@@ -5,10 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewAccountDto {
-
+public class AccountResponseDto {
     private String iban;
     private String currency;
     private Double balance;
+    private Boolean approved;
 
 }

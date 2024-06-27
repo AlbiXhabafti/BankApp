@@ -3,12 +3,16 @@ package com.example.BankingApp.card.service.impl;
 import com.example.BankingApp.account.model.Account;
 import com.example.BankingApp.account.repository.AccountRepository;
 import com.example.BankingApp.card.converter.DebitCardConverter;
+import com.example.BankingApp.card.dto.DebitCardResponseDto;
 import com.example.BankingApp.card.dto.NewDebitCardDto;
 import com.example.BankingApp.card.model.DebitCard;
 import com.example.BankingApp.card.repository.DebitCardRepository;
 import com.example.BankingApp.card.service.DebitCardService;
+import com.example.BankingApp.exception.NoResultFoundException;
 import jakarta.persistence.NoResultException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DebitCardServiceImpl implements DebitCardService {
@@ -30,16 +34,18 @@ public class DebitCardServiceImpl implements DebitCardService {
         }
             DebitCard debitCard = debitCardConverter.convertToDebitCard(dto);
             Account account = accountRepository.findByIban(dto.getIban());
-            debitCard.setAccount(account);
-            debitCardRepository.save(debitCard);
-            return debitCard.getId();
-
+            if (account.isApproved()){
+                debitCard.setAccount(account);
+                debitCardRepository.save(debitCard);
+                return debitCard.getId();
+            }
+            return null;
     }
 
     @Override
     public void update(Integer id, Boolean approved,String disapproveReason) {
         DebitCard debitCard = debitCardRepository.findById(id)
-                .orElseThrow(()->new NoResultException("debit card is not found"));
+                .orElseThrow(()->new NoResultFoundException("debit card is not found"));
 
         debitCard.setApproved(approved);
         if (approved.equals(false)){
@@ -48,5 +54,11 @@ public class DebitCardServiceImpl implements DebitCardService {
             debitCard.setDisapproveReason(null);
         }
         debitCardRepository.save(debitCard);
+    }
+
+    @Override
+    public List<DebitCardResponseDto> get(String email) {
+        List<DebitCard>cardList = debitCardRepository.getByEmail(email);
+        return cardList.stream().map(debitCardConverter::convertToDebitCardResponseDto).toList();
     }
 }

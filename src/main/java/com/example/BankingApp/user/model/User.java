@@ -1,11 +1,14 @@
 package com.example.BankingApp.user.model;
 
+import com.example.BankingApp.account.model.Account;
+import com.example.BankingApp.transaction.model.Transaction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -26,7 +29,6 @@ public class User {
     private String username;
 
     @Column(nullable = false, unique = true)
-
     private String email;
 
     @Column(nullable = false)
@@ -38,4 +40,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+
+
 }

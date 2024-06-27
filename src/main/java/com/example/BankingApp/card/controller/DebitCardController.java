@@ -1,5 +1,6 @@
 package com.example.BankingApp.card.controller;
 
+import com.example.BankingApp.card.dto.DebitCardResponseDto;
 import com.example.BankingApp.card.dto.NewDebitCardDto;
 import com.example.BankingApp.card.service.DebitCardService;
 import com.example.BankingApp.user.config.ApiPaths;
@@ -9,7 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -32,10 +38,21 @@ public class DebitCardController {
 
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping(ApiPaths.APPROVED)
-    public ResponseEntity<Void>update(@RequestParam Integer id, @RequestParam Boolean approved, @RequestParam String disapproveReason){
+    public ResponseEntity<Void>update(@RequestParam Integer id,@RequestParam Boolean approved, @RequestParam String disapproveReason){
         logger.info("attempt to approved debit card with id: {}",id);
         debitCardService.update(id,approved,disapproveReason);
         logger.info("debit card with id: {} is approved {}",id,approved);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping
+    public ResponseEntity<List<DebitCardResponseDto>>get(Principal principal){
+        logger.info("attempt to get list of account");
+        var result = debitCardService.get(principal.getName());
+        logger.info("getting list of debit cards {}",result);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
 }
