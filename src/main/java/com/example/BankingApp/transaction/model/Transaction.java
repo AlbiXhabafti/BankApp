@@ -34,6 +34,11 @@ public class Transaction {
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
+    private Account targetAccount;
+
+    @ManyToOne
     private User createdBy;
+
+
 }

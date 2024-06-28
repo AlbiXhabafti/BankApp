@@ -1,6 +1,6 @@
 package com.example.BankingApp.user.service.impl;
 
-import com.example.BankingApp.user.convert.UserConverter;
+import com.example.BankingApp.user.converter.UserConverter;
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
 import com.example.BankingApp.user.enums.RoleEnum;
@@ -52,12 +52,6 @@ public class UserServiceImpl implements UserService {
             if (dto.getEmail() != null) {
                 user.setEmail(dto.getEmail());
             }
-            if (dto.getName() != null) {
-                user.setName(dto.getName());
-            }
-            if (dto.getUsername() != null) {
-                user.setUsername(dto.getUsername());
-            }
             if (dto.getPassword() != null) {
                 user.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
@@ -79,12 +73,6 @@ public class UserServiceImpl implements UserService {
         if (hasRoleClient(user)) {
             if (dto.getEmail() != null) {
                 user.setEmail(dto.getEmail());
-            }
-            if (dto.getName() != null) {
-                user.setName(dto.getName());
-            }
-            if (dto.getUsername() != null) {
-                user.setUsername(dto.getUsername());
             }
             if (dto.getPassword() != null) {
                 user.setPassword(passwordEncoder.encode(dto.getPassword()));

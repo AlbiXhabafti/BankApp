@@ -45,8 +45,8 @@ public class TransactionController {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
     @PreAuthorize("hasRole('BANKER')")
-    @GetMapping(ApiPaths.EMAIL)
-    public ResponseEntity<List<TransactionResponseDto>>get(@PathVariable String email){
+    @GetMapping(ApiPaths.USER)
+    public ResponseEntity<List<TransactionResponseDto>>get(@RequestParam String email){
         logger.info("attempt to get  transaction for  user:{}",email);
         var result = transactionService.get(email);
         logger.info(" getting transactions {}",result);

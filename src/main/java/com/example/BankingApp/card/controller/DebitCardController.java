@@ -29,18 +29,18 @@ public class DebitCardController {
     }
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping(ApiPaths.REQUEST)
-    public ResponseEntity<Integer>add(@RequestBody NewDebitCardDto dto){
-        logger.info("attempt to add new card {}",dto);
-        var result = debitCardService.add(dto);
+    public ResponseEntity<Integer>add(@RequestBody NewDebitCardDto dto,Principal principal){
+        logger.info("attempting to add to add new card {}",dto);
+        var result = debitCardService.add(dto, principal.getName());
         logger.info("new card with id: {} is added",result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping(ApiPaths.APPROVED)
-    public ResponseEntity<Void>update(@RequestParam Integer id,@RequestParam Boolean approved, @RequestParam String disapproveReason){
-        logger.info("attempt to approved debit card with id: {}",id);
-        debitCardService.update(id,approved,disapproveReason);
+    public ResponseEntity<Void>update(@RequestParam Integer id,@RequestParam Boolean approved, @RequestParam String disapproveReason,Principal principal){
+        logger.info("attempting to add to approved debit card with id: {}",id);
+        debitCardService.update(id,approved,disapproveReason,principal.getName());
         logger.info("debit card with id: {} is approved {}",id,approved);
         return new ResponseEntity<>(HttpStatus.OK);
     }

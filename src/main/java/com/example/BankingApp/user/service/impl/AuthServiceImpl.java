@@ -1,5 +1,6 @@
 package com.example.BankingApp.user.service.impl;
 
+import com.example.BankingApp.user.dto.JwtAuthResponse;
 import com.example.BankingApp.user.dto.LoginDto;
 import com.example.BankingApp.user.jwt.JwtTokenProvider;
 import com.example.BankingApp.user.service.AuthService;
@@ -18,17 +19,17 @@ public class AuthServiceImpl implements AuthService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public String login(LoginDto loginDto) {
-
+    public JwtAuthResponse login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(),
+                loginDto.getEmail(),
                 loginDto.getPassword()
         ));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtTokenProvider.generateToken(authentication);
 
-        return token;
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        return jwtAuthResponse;
     }
 }

@@ -10,6 +10,7 @@ public class TransactionDto {
     private Double amount;
 
     private String iban;
+    private String targetIban;
 
     private String currency;
 

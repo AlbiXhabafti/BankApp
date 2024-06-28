@@ -28,23 +28,28 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Integer add(AccountDto accountDto, String userEmail) {
+    public Integer add(AccountDto accountDto,String email) {
         Account account = accountConverter.convertToAccount(accountDto);
-        User user = userRepository.findByEmail(userEmail).orElseThrow(()-> new NoResultFoundException("account is not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoResultFoundException("account is not found"));
         account.setCreatedBy(user);
         accountRepository.save(account);
         return account.getId();
     }
 
     @Override
-    public void update(Integer id, Boolean approved) {
+    public void update(Integer id, Boolean approved, String email) {
         Account account = accountRepository.findById(id).orElseThrow(()->new NoResultFoundException("account is not found"));
+        User user = userRepository.findByEmail(email).orElse(null);
         account.setApproved(approved);
+        account.setModifiedBy(user);
         accountRepository.save(account);
     }
 
     @Override
     public List<AccountResponseDto> get(String email) {
+        if (!userRepository.existsByEmail(email)){
+            throw new NoResultFoundException("user is not found");
+        }
         List<Account>accountList = accountRepository.findAccountByEmail(email);
         return accountList.stream().map(accountConverter::convertToAccountResponseDto).toList();
     }

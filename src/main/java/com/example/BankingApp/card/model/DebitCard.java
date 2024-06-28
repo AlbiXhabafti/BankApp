@@ -1,6 +1,7 @@
 package com.example.BankingApp.card.model;
 
 import com.example.BankingApp.account.model.Account;
+import com.example.BankingApp.user.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,5 +33,11 @@ public class DebitCard {
     private boolean approved;
 
     private String disapproveReason;
+
+    @ManyToOne
+    private User createdBy;
+
+    @ManyToOne
+    private User modifiedBy;
 
 }

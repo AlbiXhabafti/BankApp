@@ -8,8 +8,10 @@ import com.example.BankingApp.card.dto.NewDebitCardDto;
 import com.example.BankingApp.card.model.DebitCard;
 import com.example.BankingApp.card.repository.DebitCardRepository;
 import com.example.BankingApp.card.service.DebitCardService;
+import com.example.BankingApp.exception.ApprovedException;
 import com.example.BankingApp.exception.NoResultFoundException;
-import jakarta.persistence.NoResultException;
+import com.example.BankingApp.user.model.User;
+import com.example.BankingApp.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,46 +21,51 @@ public class DebitCardServiceImpl implements DebitCardService {
     private final DebitCardRepository debitCardRepository;
     private final DebitCardConverter debitCardConverter;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
 
-    public DebitCardServiceImpl(DebitCardRepository debitCardRepository, DebitCardConverter debitCardConverter, AccountRepository accountRepository) {
+    public DebitCardServiceImpl(DebitCardRepository debitCardRepository, DebitCardConverter debitCardConverter, AccountRepository accountRepository, UserRepository userRepository) {
         this.debitCardRepository = debitCardRepository;
         this.debitCardConverter = debitCardConverter;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Integer add(NewDebitCardDto dto) {
+    public Integer add(NewDebitCardDto dto, String email) {
         if (dto.getSalary() <= 500) {
             throw new IllegalArgumentException("Salary must be greater than 500");
         }
-            DebitCard debitCard = debitCardConverter.convertToDebitCard(dto);
-            Account account = accountRepository.findByIban(dto.getIban());
-            if (account.isApproved()){
-                debitCard.setAccount(account);
-                debitCardRepository.save(debitCard);
-                return debitCard.getId();
-            }
-            return null;
+        Account account = accountRepository.findByIbanAndCreatedByEmail(dto.getIban(),email)
+                .orElseThrow(()-> new NoResultFoundException("Please verify your iban. Try again."));
+        if (!account.isApproved()){
+            throw new ApprovedException("account is not approved");
+        }
+        DebitCard debitCard = debitCardConverter.convertToDebitCard(dto);
+        debitCard.setAccount(account);
+        debitCard.setCreatedBy(account.getCreatedBy());
+        debitCardRepository.save(debitCard);
+        return debitCard.getId();
     }
 
     @Override
-    public void update(Integer id, Boolean approved,String disapproveReason) {
+    public void update(Integer id, Boolean approved,String disapproveReason,String email) {
         DebitCard debitCard = debitCardRepository.findById(id)
                 .orElseThrow(()->new NoResultFoundException("debit card is not found"));
-
         debitCard.setApproved(approved);
         if (approved.equals(false)){
             debitCard.setDisapproveReason(disapproveReason);
         }else {
             debitCard.setDisapproveReason(null);
         }
+        User user = userRepository.findByEmail(email).orElse(null);
+        debitCard.setModifiedBy(user);
         debitCardRepository.save(debitCard);
     }
 
     @Override
     public List<DebitCardResponseDto> get(String email) {
-        List<DebitCard>cardList = debitCardRepository.getByEmail(email);
+        List<DebitCard>cardList = debitCardRepository.getByCreatedByEmail(email);
         return cardList.stream().map(debitCardConverter::convertToDebitCardResponseDto).toList();
     }
 }

@@ -33,15 +33,14 @@ public class ExceptionMapper {
         logger.info("Exception is thrown: {}",problemDetail.getTitle());
         return problemDetail;
     }
-
-//    @ExceptionHandler(AuthenticationException.class)
-//    public ProblemDetail handleException(HttpServletRequest httpServletRequest, AuthenticationException e){
-//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,e.getMessage());
-//        problemDetail.setTitle("User is unauthorized.");
-//        addErrorForObservation(httpServletRequest,e);
-//        logger.info("Exception is thrown: {}",problemDetail.getTitle());
-//        return problemDetail;
-//    }
+    @ExceptionHandler(ApprovedException.class)
+    public ProblemDetail handleException(HttpServletRequest httpServletRequest, ApprovedException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_ACCEPTABLE,e.getMessage());
+        problemDetail.setTitle("Problem with account .");
+        addErrorForObservation(httpServletRequest,e);
+        logger.info("Exception is thrown: {}",problemDetail.getTitle());
+        return problemDetail;
+    }
 
 
 

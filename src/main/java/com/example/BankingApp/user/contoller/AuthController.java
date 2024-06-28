@@ -4,26 +4,32 @@ import com.example.BankingApp.user.dto.JwtAuthResponse;
 import com.example.BankingApp.user.dto.LoginDto;
 import com.example.BankingApp.user.service.AuthService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthService authService;
+    Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    // Build Login REST API
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
-        String token = authService.login(loginDto);
-
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
-
-        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
+        logger.info("attempting to logIn with email: {}",loginDto.getEmail());
+        var result =  authService.login(loginDto);
+        logger.info(" user with email {} is successfully logIn",loginDto.getEmail());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

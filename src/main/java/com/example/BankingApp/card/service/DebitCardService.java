@@ -6,7 +6,7 @@ import com.example.BankingApp.card.dto.NewDebitCardDto;
 import java.util.List;
 
 public interface DebitCardService {
-    Integer add(NewDebitCardDto dto);
-    void update(Integer id, Boolean approved,String disapproveReason);
+    Integer add(NewDebitCardDto dto, String email);
+    void update(Integer id, Boolean approved,String disapproveReason,String email);
     List<DebitCardResponseDto> get(String email);
 }

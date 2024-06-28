@@ -32,16 +32,16 @@ public class AccountController {
     @PostMapping(ApiPaths.REQUEST)
     public ResponseEntity<Integer>addAccount(@RequestBody AccountDto accountDto, Principal principal){
         logger.info("attempt to add new account {}", accountDto);
-        var result = accountService.add(accountDto,principal.getName());
+        var result = accountService.add(accountDto, principal.getName());
         logger.info("account with id {} is added ",result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping
-    public ResponseEntity<Void>updateAccount( @RequestParam Boolean approved,@RequestParam Integer id){
+    public ResponseEntity<Void>updateAccount( @RequestParam Boolean approved,@RequestParam Integer id, Principal principal){
         logger.info("attempt to approved account with id: {}",id);
-        accountService.update(id,approved);
+        accountService.update(id,approved, principal.getName());
         logger.info("account with id: {} is approved", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -49,16 +49,16 @@ public class AccountController {
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping
     public ResponseEntity<List<AccountResponseDto>>get(Principal principal){
-        logger.info("attempt to get account list for user: {} ",principal.getName());
+        logger.info("attempt to get list of accounts  for loggedUser: {} ",principal.getName());
         var result = accountService.get(principal.getName());
-        logger.info("getting account list {}",result);
+        logger.info("getting lis of accounts {}",result);
         return new ResponseEntity<>(result,HttpStatus.OK);
 
     }
     @PreAuthorize("hasRole('BANKER')")
-    @GetMapping(ApiPaths.EMAIL)
-    public ResponseEntity<List<AccountResponseDto>>getAccount(@PathVariable String email){
-        logger.info("attempt to get account list for user: {} ",email);
+    @GetMapping(ApiPaths.USER)
+    public ResponseEntity<List<AccountResponseDto>>getAccount(@RequestParam String email){
+        logger.info("attempt to get account  list for user: {} ",email);
         var result = accountService.get(email);
         logger.info("getting account list {}",result);
         return new ResponseEntity<>(result,HttpStatus.OK);

@@ -12,4 +12,8 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
     @Query("SELECT t FROM Transaction t  " +
             "INNER JOIN User u ON t.createdBy.id = u.id WHERE u.email = :email")
     List<Transaction>findTransactionByEmail(String email);
+
+    List<Transaction>findByCreatedByEmail(String email);
+
+
 }
