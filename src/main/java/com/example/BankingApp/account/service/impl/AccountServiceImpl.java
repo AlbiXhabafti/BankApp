@@ -9,7 +9,6 @@ import com.example.BankingApp.account.service.AccountService;
 import com.example.BankingApp.exception.NoResultFoundException;
 import com.example.BankingApp.user.model.User;
 import com.example.BankingApp.user.repository.UserRepository;
-import jakarta.persistence.NoResultException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Integer add(AccountDto accountDto,String email) {
         Account account = accountConverter.convertToAccount(accountDto);
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoResultFoundException("account is not found"));
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()-> new NoResultFoundException("account is not found"));
         account.setCreatedBy(user);
         accountRepository.save(account);
         return account.getId();
@@ -39,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void update(Integer id, Boolean approved, String email) {
         Account account = accountRepository.findById(id).orElseThrow(()->new NoResultFoundException("account is not found"));
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
         account.setApproved(approved);
         account.setModifiedBy(user);
         accountRepository.save(account);

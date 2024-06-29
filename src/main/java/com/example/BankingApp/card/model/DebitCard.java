@@ -19,7 +19,7 @@ public class DebitCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String cardNumber;
 
     private String cardholderName;
@@ -27,7 +27,6 @@ public class DebitCard {
     private String expirationDate;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
     private boolean approved;

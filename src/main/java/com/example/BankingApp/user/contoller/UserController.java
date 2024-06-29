@@ -26,53 +26,53 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(ApiPaths.BANKER)
-    public ResponseEntity<Integer>addBanker(@RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<Void>addBanker(@RequestBody UserRequestDto userRequestDto){
         logger.info("trying to add new banker {}", userRequestDto);
-        var result = userService.addBanker(userRequestDto);
-        logger.info("new banker with id {} is added",result);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        userService.addBanker(userRequestDto);
+        logger.info("new banker with email {} is added",userRequestDto.getEmail());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(ApiPaths.BANKER)
-    public ResponseEntity<Integer>updateBanker(@RequestParam Integer id ,@RequestBody UserDto userDto){
+    public ResponseEntity<Void>updateBanker(@RequestParam String email ,@RequestBody UserDto userDto){
         logger.info("trying to update banker {}", userDto);
-        var result = userService.updateBanker(id,userDto);
-        logger.info(" banker with id {} is updated",result);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        userService.updateBanker(email,userDto);
+        logger.info(" banker with email {} is updated",email);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(ApiPaths.BANKER)
-    public ResponseEntity<Void>deleteBanker(@RequestParam Integer id){
-        logger.info("trying to delete  banker {}", id);
-        userService.deleteBanker(id);
-        logger.info(" banker with id {} is deleted",id);
+    public ResponseEntity<Void>deleteBanker(@RequestParam String email){
+        logger.info("trying to delete  banker with email {}", email);
+        userService.deleteBanker(email);
+        logger.info(" banker with email {} is deleted",email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @PostMapping(ApiPaths.CLIENT)
-    public ResponseEntity<Integer>addClient(@RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<Void>addClient(@RequestBody UserRequestDto userRequestDto){
         logger.info("trying to add new client {}", userRequestDto);
-        var result = userService.addClient(userRequestDto);
-        logger.info("new client with id {} is added",result);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        userService.addClient(userRequestDto);
+        logger.info("new client with email {} is added",userRequestDto.getEmail());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping(ApiPaths.CLIENT)
-    public ResponseEntity<Integer>updateClient(@RequestParam Integer id ,@RequestBody UserDto userDto){
+    public ResponseEntity<Void>updateClient(@RequestParam String email ,@RequestBody UserDto userDto){
         logger.info("trying to update client {}", userDto);
-        var result = userService.updateClient(id,userDto);
-        logger.info(" client with id {} is updated",result);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+         userService.updateClient(email,userDto);
+        logger.info(" client with email {} is updated",email);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @DeleteMapping(ApiPaths.CLIENT)
-    public ResponseEntity<Void>deleteClient(@RequestParam Integer id){
-        logger.info("trying to delete  client {}", id);
-        userService.deleteClient(id);
-        logger.info(" client with id {} is deleted",id);
+    public ResponseEntity<Void>deleteClient(@RequestParam String email){
+        logger.info("trying to delete  client {}", email);
+        userService.deleteClient(email);
+        logger.info(" client with email {} is deleted",email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

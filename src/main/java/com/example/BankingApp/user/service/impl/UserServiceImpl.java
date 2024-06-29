@@ -1,5 +1,7 @@
 package com.example.BankingApp.user.service.impl;
 
+import com.example.BankingApp.exception.NoResultFoundException;
+import com.example.BankingApp.exception.WrongRoleException;
 import com.example.BankingApp.user.converter.UserConverter;
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
@@ -10,7 +12,6 @@ import com.example.BankingApp.user.repository.RoleRepository;
 import com.example.BankingApp.user.repository.UserRepository;
 import com.example.BankingApp.user.service.UserService;
 import jakarta.persistence.NoResultException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,96 +22,66 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserConverter userConverter, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserConverter userConverter) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userConverter = userConverter;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public Integer addBanker(UserRequestDto userRequestDto) {
+    public void addBanker(UserRequestDto userRequestDto) {
             User user = addUser(userRequestDto,RoleEnum.ROLE_BANKER);
             userRepository.save(user);
-            return user.getId();
-
     }
 
     @Override
-    public Integer addClient(UserRequestDto userRequestDto) {
+    public void addClient(UserRequestDto userRequestDto) {
         User user = addUser(userRequestDto,RoleEnum.ROLE_CLIENT);
         userRepository.save(user);
-        return user.getId();
     }
 
     @Override
-    public Integer updateBanker(Integer id, UserDto dto) {
-        User user = userRepository.findById(id).orElseThrow(()->new NoResultException("user is not found"));
-        if (hasRoleBanker(user)) {
-            if (dto.getEmail() != null) {
-                user.setEmail(dto.getEmail());
-            }
-            if (dto.getPassword() != null) {
-                user.setPassword(passwordEncoder.encode(dto.getPassword()));
-            }
-            if (dto.getRole() != null) {
-                Role role = roleRepository.findByRoleEnum(RoleEnum.fromValue(dto.getRole()));
-                user.getRoles().add(role);
-
-            }
-            userRepository.save(user);
-            return user.getId();
+    public void updateBanker(String email, UserDto dto) {
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        if (!hasRoleBanker(user)){
+            throw new WrongRoleException("Admin could update only bankers");
         }
-        return null;
-
+        user = userConverter.convertToUser(user,dto);
+        userRepository.save(user);
     }
 
     @Override
-    public Integer updateClient(Integer id, UserDto dto) {
-        User user = userRepository.findById(id).orElseThrow(()->new NoResultException("user is not found"));
-        if (hasRoleClient(user)) {
-            if (dto.getEmail() != null) {
-                user.setEmail(dto.getEmail());
-            }
-            if (dto.getPassword() != null) {
-                user.setPassword(passwordEncoder.encode(dto.getPassword()));
-            }
-            if (dto.getRole() != null) {
-                Role role = roleRepository.findByRoleEnum(RoleEnum.fromValue(dto.getRole()));
-                user.getRoles().add(role);
-
-            }
-            userRepository.save(user);
-            return user.getId();
+    public void updateClient(String email, UserDto dto) {
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        if (!hasRoleClient(user)){
+            throw new WrongRoleException("Banker could update only clients");
         }
-        return null;
-
+        user = userConverter.convertToUser(user,dto);
+        userRepository.save(user);
     }
 
     @Override
-    public void deleteClient(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(()->new NoResultException("user is not found"));
-        if(hasRoleClient(user)){
-            userRepository.delete(user);
+    public void deleteClient(String email) {
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        if (!hasRoleClient(user)){
+            throw new WrongRoleException("Client could be deleted only banker user");
         }
+        userRepository.delete(user);
     }
 
-
-
     @Override
-    public void deleteBanker(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(()->new NoResultException("user is not found"));
-        if(hasRoleBanker(user)){
-            userRepository.delete(user);
+    public void deleteBanker(String email) {
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        if(!hasRoleBanker(user)){
+            throw new WrongRoleException("Banker could be deleted only by admin user");
         }
+        userRepository.delete(user);
     }
 
     private User addUser(UserRequestDto userRequestDto, RoleEnum roleEnum){
         User user = userConverter.convertToUser(userRequestDto);
-        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        Role role = roleRepository.findByRoleEnum(roleEnum);
+        Role role = roleRepository.findByRoleEnum(roleEnum).orElseThrow(()->new NoResultFoundException("role is not found"));
         user.setRoles(Collections.singleton(role));
         return user;
     }

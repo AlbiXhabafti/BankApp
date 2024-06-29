@@ -4,11 +4,12 @@ import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
 
 public interface UserService {
-    Integer addBanker(UserRequestDto userRequestDto);
-    Integer addClient(UserRequestDto userRequestDto);
-    Integer updateBanker(Integer id, UserDto userDto);
-    void deleteBanker(Integer id);
-    Integer updateClient(Integer id, UserDto userDto);
-    void deleteClient(Integer id);
+    void addBanker(UserRequestDto userRequestDto);
+    void updateBanker(String email, UserDto userDto);
+    void deleteBanker(String email);
+
+    void addClient(UserRequestDto userRequestDto);
+    void updateClient(String email, UserDto userDto);
+    void deleteClient(String email);
 
 }

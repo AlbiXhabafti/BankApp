@@ -8,7 +8,6 @@ import com.example.BankingApp.card.dto.NewDebitCardDto;
 import com.example.BankingApp.card.model.DebitCard;
 import com.example.BankingApp.card.repository.DebitCardRepository;
 import com.example.BankingApp.card.service.DebitCardService;
-import com.example.BankingApp.exception.ApprovedException;
 import com.example.BankingApp.exception.NoResultFoundException;
 import com.example.BankingApp.user.model.User;
 import com.example.BankingApp.user.repository.UserRepository;
@@ -39,7 +38,7 @@ public class DebitCardServiceImpl implements DebitCardService {
         Account account = accountRepository.findByIbanAndCreatedByEmail(dto.getIban(),email)
                 .orElseThrow(()-> new NoResultFoundException("Please verify your iban. Try again."));
         if (!account.isApproved()){
-            throw new ApprovedException("account is not approved");
+            throw new NullPointerException("account is not approved");
         }
         DebitCard debitCard = debitCardConverter.convertToDebitCard(dto);
         debitCard.setAccount(account);
@@ -58,7 +57,7 @@ public class DebitCardServiceImpl implements DebitCardService {
         }else {
             debitCard.setDisapproveReason(null);
         }
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
         debitCard.setModifiedBy(user);
         debitCardRepository.save(debitCard);
     }

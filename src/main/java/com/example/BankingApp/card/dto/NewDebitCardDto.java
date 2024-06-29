@@ -1,9 +1,8 @@
 package com.example.BankingApp.card.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
-import org.springframework.validation.annotation.Validated;
 
 @Getter
 @Setter
@@ -15,9 +14,10 @@ public class NewDebitCardDto {
 
     private String expirationDate;
 
-    @NonNull
+    @NotNull
     private Double salary;
 
+    @NotNull
     private String iban;
 
 }

@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -37,8 +35,8 @@ public class DebitCardController {
     }
 
     @PreAuthorize("hasRole('BANKER')")
-    @PutMapping(ApiPaths.APPROVED)
-    public ResponseEntity<Void>update(@RequestParam Integer id,@RequestParam Boolean approved, @RequestParam String disapproveReason,Principal principal){
+    @PutMapping
+    public ResponseEntity<Void>update(@RequestParam Boolean approved,@RequestParam Integer id, @RequestParam String disapproveReason,Principal principal){
         logger.info("attempting to add to approved debit card with id: {}",id);
         debitCardService.update(id,approved,disapproveReason,principal.getName());
         logger.info("debit card with id: {} is approved {}",id,approved);
