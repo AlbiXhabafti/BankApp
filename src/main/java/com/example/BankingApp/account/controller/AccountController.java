@@ -32,17 +32,17 @@ public class AccountController {
     @PostMapping(ApiPaths.REQUEST)
     public ResponseEntity<Integer>addAccount(@RequestBody AccountDto accountDto, Principal principal){
         logger.info("attempt to add new account {}", accountDto);
-        var result = accountService.add(accountDto, principal.getName());
-        logger.info("account with id {} is added ",result);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        accountService.add(accountDto, principal.getName());
+        logger.info("account with iban:{} is added ",accountDto.getIban());
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping
-    public ResponseEntity<Void>updateAccount( @RequestParam Boolean approved,@RequestParam Integer id, Principal principal){
-        logger.info("attempt to approved account with id: {}",id);
-        accountService.update(id,approved, principal.getName());
-        logger.info("account with id: {} is approved", id);
+    public ResponseEntity<Void>updateAccount( @RequestParam String iban,@RequestParam Boolean approved, Principal principal){
+        logger.info("attempt to approved account with iban: {}",iban);
+        accountService.update(iban,approved, principal.getName());
+        logger.info("account with iban: {} is approved", iban);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

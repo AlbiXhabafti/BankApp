@@ -2,8 +2,6 @@ package com.example.BankingApp.user.converter;
 
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
-import com.example.BankingApp.user.enums.RoleEnum;
-import com.example.BankingApp.user.model.Role;
 import com.example.BankingApp.user.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface AccountService {
 
-    Integer add(AccountDto accountDto,String email);
+    void add(AccountDto accountDto,String email);
 
-    void update(Integer id,Boolean approved, String email);
+    void update(String iban,Boolean approved, String email);
 
     List<AccountResponseDto> get(String email);
 
