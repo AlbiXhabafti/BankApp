@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
         if (!userRepository.existsByEmail(email)){
             throw new NoResultFoundException("user is not found");
         }
-        List<Account>accountList = accountRepository.findAccountByEmail(email);
+        List<Account>accountList = accountRepository.findByCreatedByEmail(email);
         return accountList.stream().map(accountConverter::convertToAccountResponseDto).toList();
     }
 }

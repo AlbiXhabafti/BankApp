@@ -12,10 +12,10 @@ public class TransactionDto {
     private Double amount;
 
     @NotNull
-    private String iban;
+    private String fromIban;
 
     @NotNull
-    private String targetIban;
+    private String toIban;
 
     private String currency;
 

@@ -31,7 +31,7 @@ public class DebitCardServiceImpl implements DebitCardService {
     }
 
     @Override
-    public Integer add(NewDebitCardDto dto, String email) {
+    public void  add(NewDebitCardDto dto, String email) {
         if (dto.getSalary() <= 500) {
             throw new IllegalArgumentException("Salary must be greater than 500");
         }
@@ -44,7 +44,6 @@ public class DebitCardServiceImpl implements DebitCardService {
         debitCard.setAccount(account);
         debitCard.setCreatedBy(account.getCreatedBy());
         debitCardRepository.save(debitCard);
-        return debitCard.getId();
     }
 
     @Override

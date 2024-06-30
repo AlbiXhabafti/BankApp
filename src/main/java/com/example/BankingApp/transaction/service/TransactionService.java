@@ -6,7 +6,7 @@ import com.example.BankingApp.transaction.dto.TransactionResponseDto;
 import java.util.List;
 
 public interface TransactionService {
-    Integer add(TransactionDto transactionDto,String email);
+    void add(TransactionDto transactionDto,String email);
     List<TransactionResponseDto> get(String email);
 
 }

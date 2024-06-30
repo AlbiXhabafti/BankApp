@@ -17,7 +17,7 @@ public class JwtTokenProvider {
     @Value("${app-jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app-jwt-expiration-milliseconds}")
+    @Value("${app.jwt.expiration-minutes}")
     private long jwtExpirationDate;
 
     public String generateToken(Authentication authentication){
@@ -43,7 +43,7 @@ public class JwtTokenProvider {
     }
 
     // get username from JWT token
-    public String getUsername(String token){
+    public String getUserEmail(String token){
 
         return Jwts.parser()
                 .verifyWith((SecretKey) key())

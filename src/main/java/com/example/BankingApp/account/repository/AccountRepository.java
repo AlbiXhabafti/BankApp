@@ -11,8 +11,7 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
 
     Optional<Account> findByIbanAndCreatedByEmail(String iban, String email);
 
-    @Query("SELECT a FROM Account a INNER JOIN User u ON  a.createdBy.id = u.id WHERE u.email = :email ")
-    List<Account> findAccountByEmail(String email);
+    List<Account> findByCreatedByEmail(String email);
 
     Optional<Account>findByIban(String iban);
 

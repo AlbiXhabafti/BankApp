@@ -9,5 +9,7 @@ public class TransactionResponseDto {
     private Double amount;
     private String currency;
     private String type;
+    private String fromIban;
+    private String toIban;
 
 }

@@ -29,11 +29,11 @@ public class TransactionController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
-    public ResponseEntity<Integer>add(@RequestBody TransactionDto transactionDto, Principal principal){
+    public ResponseEntity<Void>add(@RequestBody TransactionDto transactionDto, Principal principal){
         logger.info("attempt to add new transaction {}",transactionDto);
-        var result = transactionService.add(transactionDto,principal.getName());
-        logger.info("new transaction with id: {} is created", result);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        transactionService.add(transactionDto,principal.getName());
+        logger.info("new transaction  is created");
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('CLIENT')")

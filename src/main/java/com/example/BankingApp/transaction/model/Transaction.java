@@ -33,7 +33,7 @@ public class Transaction {
     private Account account;
 
     @ManyToOne
-    private Account targetAccount;
+    private Account toAccount;
 
     @ManyToOne
     private User createdBy;

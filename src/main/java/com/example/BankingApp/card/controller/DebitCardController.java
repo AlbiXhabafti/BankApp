@@ -27,11 +27,11 @@ public class DebitCardController {
     }
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping(ApiPaths.REQUEST)
-    public ResponseEntity<Integer>add(@RequestBody NewDebitCardDto dto,Principal principal){
+    public ResponseEntity<Void>add(@RequestBody NewDebitCardDto dto,Principal principal){
         logger.info("attempting to add to add new card {}",dto);
-        var result = debitCardService.add(dto, principal.getName());
-        logger.info("new card with id: {} is added",result);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        debitCardService.add(dto, principal.getName());
+        logger.info("new card is added");
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('BANKER')")

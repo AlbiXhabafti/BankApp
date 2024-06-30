@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.config;
+package com.example.BankingApp.user.service.impl;
 
 import com.example.BankingApp.user.model.User;
 import com.example.BankingApp.user.repository.UserRepository;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserRepository userRepository;
 

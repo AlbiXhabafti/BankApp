@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionConverter {
-    public TransactionResponseDto convertToTransactionDto(Transaction transaction){
+    public TransactionResponseDto convertToTransactionResponseDto(Transaction transaction){
         TransactionResponseDto dto = new TransactionResponseDto();
         dto.setType(transaction.getTransactionType().getValue());
-        dto.setCurrency(transaction.getTransactionType().getValue());
+        dto.setCurrency(transaction.getCurrencyEnum().getValue());
         dto.setAmount(transaction.getAmount());
+        dto.setToIban(transaction.getToAccount().getIban());
+        dto.setFromIban(transaction.getAccount().getIban());
         return dto;
     }
     public Transaction convertToTransaction(TransactionDto dto, Account account, Account targetAccount ){
@@ -30,7 +32,7 @@ public class TransactionConverter {
             targetAccount.setBalance(subtractedBalance(targetAccount.getBalance(), dto.getAmount(), targetAccount.getIban()));
         }
         transaction.setAccount(account);
-        transaction.setTargetAccount(targetAccount);
+        transaction.setToAccount(targetAccount);
         return transaction;
     }
     private Double subtractedBalance(Double balance, Double amount,String iban){
