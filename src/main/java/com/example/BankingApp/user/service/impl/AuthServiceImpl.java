@@ -3,7 +3,6 @@ package com.example.BankingApp.user.service.impl;
 import com.example.BankingApp.exception.NoResultFoundException;
 import com.example.BankingApp.user.dto.JwtAuthResponse;
 import com.example.BankingApp.user.dto.LoginDto;
-import com.example.BankingApp.user.jwt.JwtTokenProvider;
 import com.example.BankingApp.user.model.User;
 import com.example.BankingApp.user.repository.UserRepository;
 import com.example.BankingApp.user.service.AuthService;
@@ -34,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+
         String token = jwtTokenProvider.generateToken(authentication);
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
@@ -41,17 +41,14 @@ public class AuthServiceImpl implements AuthService {
         return jwtAuthResponse;
     }
 
+
     @Override
-    public void logout(LoginDto loginDto) {
-        User user = userRepository.findByEmailAndDeletedFalse(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+    public void logout(String email,String token) {
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
         if (user == null) {
             throw new RuntimeException("User not found or deleted.");
         }
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getEmail(),
-                loginDto.getPassword()
-        ));
-        SecurityContextHolder.getContext().setAuthentication(null);
+        jwtTokenProvider.revokeToken(email,token);
 
     }
 }

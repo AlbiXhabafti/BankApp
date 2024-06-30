@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.jwt;
+package com.example.BankingApp.user.service.impl;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class JwtTokenProvider {
@@ -17,36 +19,38 @@ public class JwtTokenProvider {
     @Value("${app-jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app.jwt.expiration-minutes}")
+    @Value("${app-jwt-expiration-milliseconds}")
     private long jwtExpirationDate;
+
+    private final Map<String, String> revokedTokens = new ConcurrentHashMap<>();
 
     public String generateToken(Authentication authentication){
 
-        String username = authentication.getName();
+        String email = authentication.getName();
 
         Date currentDate = new Date();
 
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 
         String token = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .issuedAt(new Date())
                 .expiration(expireDate)
-                .signWith(key())
+                .signWith(generateKey())
                 .compact();
 
         return token;
     }
 
-    private Key key(){
+    private Key generateKey(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    // get username from JWT token
+    // get email from JWT token
     public String getUserEmail(String token){
 
         return Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith((SecretKey) generateKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -56,10 +60,21 @@ public class JwtTokenProvider {
     // validate JWT token
     public boolean validateToken(String token){
             Jwts.parser()
-                    .verifyWith((SecretKey) key())
+                    .verifyWith((SecretKey) generateKey())
                     .build()
                     .parse(token);
             return true;
 
+    }
+
+    public void revokeToken(String principal, String token) {
+        revokedTokens.put(principal, token);
+    }
+    public boolean isTokenRevoked(String principal, String token) {
+        String storedToken = revokedTokens.get(principal);
+        return storedToken != null && storedToken.equals(token);
+    }
+    public void removeRevokedToken(String principal) {
+        revokedTokens.remove(principal);
     }
 }

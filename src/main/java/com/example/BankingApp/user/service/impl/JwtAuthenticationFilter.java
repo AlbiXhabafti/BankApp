@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.jwt;
+package com.example.BankingApp.user.service.impl;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,9 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
 
-            String username = jwtTokenProvider.getUserEmail(token);
+            String email = jwtTokenProvider.getUserEmail(token);
+            // Check if token is revoked
+            if (jwtTokenProvider.isTokenRevoked(email, token)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been revoked");
+                return;
+            }
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
               userDetails,
@@ -53,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
     private String getTokenFromRequest(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");

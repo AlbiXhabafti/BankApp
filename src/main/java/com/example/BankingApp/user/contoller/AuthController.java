@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -33,10 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody LoginDto loginDto){
-        logger.info("attempting to logout with email: {}",loginDto.getEmail());
-        authService.logout(loginDto);
-        logger.info(" user with logout {} is successfully logIn",loginDto.getEmail());
+    public ResponseEntity<Void> logout(@RequestParam String email,@RequestParam String token){
+        logger.info("attempting to logout with email: {}",email);
+        authService.logout(email,token);
+        logger.info(" user with logout {} is successfully logIn",email);
         return new ResponseEntity<> (HttpStatus.OK);
     }
 }

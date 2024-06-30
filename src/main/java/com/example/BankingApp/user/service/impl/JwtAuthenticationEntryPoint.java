@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.jwt;
+package com.example.BankingApp.user.service.impl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

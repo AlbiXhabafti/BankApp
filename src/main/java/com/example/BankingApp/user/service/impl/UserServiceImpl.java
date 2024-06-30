@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteClient(String email) {
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultFoundException("user is not found"));
         if (!hasRoleClient(user)){
             throw new WrongRoleException("Banker could delete only clients");
         }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteBanker(String email) {
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultException("user is not found"));
+        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()->new NoResultFoundException("user is not found"));
         if(!hasRoleBanker(user)){
             throw new WrongRoleException("Admin could delete only bankers");
         }
