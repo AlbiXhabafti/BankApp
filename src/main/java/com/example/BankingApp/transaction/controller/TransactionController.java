@@ -3,7 +3,7 @@ package com.example.BankingApp.transaction.controller;
 import com.example.BankingApp.transaction.dto.TransactionDto;
 import com.example.BankingApp.transaction.dto.TransactionResponseDto;
 import com.example.BankingApp.transaction.service.TransactionService;
-import com.example.BankingApp.user.config.ApiPaths;
+import com.example.BankingApp.user.enums.ApiPaths;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,14 +16,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class AuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationFilter(TokenService tokenService, UserDetailsService userDetailsService) {
+        this.tokenService = tokenService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -34,11 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getTokenFromRequest(request);
 
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+        if(StringUtils.hasText(token) && tokenService.validateToken(token)){
 
-            String email = jwtTokenProvider.getUserEmail(token);
+            String email = tokenService.getUserEmail(token);
             // Check if token is revoked
-            if (jwtTokenProvider.isTokenRevoked(email, token)) {
+            if (tokenService.isTokenRevoked(email, token)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been revoked");
                 return;
             }

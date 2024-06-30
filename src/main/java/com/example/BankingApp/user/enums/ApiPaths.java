@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.config;
+package com.example.BankingApp.user.enums;
 
 public class ApiPaths {
     public static final String BANKER = "/banker";

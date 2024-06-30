@@ -1,7 +1,7 @@
 package com.example.BankingApp.user.config;
 
-import com.example.BankingApp.user.service.impl.JwtAuthenticationEntryPoint;
-import com.example.BankingApp.user.service.impl.JwtAuthenticationFilter;
+import com.example.BankingApp.user.service.impl.AuthenticationEntryPoint;
+import com.example.BankingApp.user.service.impl.AuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class SpringSecurityConfig {
 
-    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private AuthenticationEntryPoint authenticationEntryPoint;
 
-    private JwtAuthenticationFilter authenticationFilter;
+    private AuthenticationFilter authenticationFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

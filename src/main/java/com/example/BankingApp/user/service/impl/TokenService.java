@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class JwtTokenProvider {
+public class TokenService {
 
     @Value("${app-jwt-secret}")
     private String jwtSecret;

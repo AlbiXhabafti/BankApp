@@ -1,6 +1,6 @@
 package com.example.BankingApp.user.contoller;
 
-import com.example.BankingApp.user.config.ApiPaths;
+import com.example.BankingApp.user.enums.ApiPaths;
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
 import com.example.BankingApp.user.service.UserService;

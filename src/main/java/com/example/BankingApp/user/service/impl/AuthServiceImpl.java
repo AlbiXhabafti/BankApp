@@ -1,7 +1,7 @@
 package com.example.BankingApp.user.service.impl;
 
 import com.example.BankingApp.exception.NoResultFoundException;
-import com.example.BankingApp.user.dto.JwtAuthResponse;
+import com.example.BankingApp.user.dto.UserResponseDto;
 import com.example.BankingApp.user.dto.LoginDto;
 import com.example.BankingApp.user.model.User;
 import com.example.BankingApp.user.repository.UserRepository;
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private AuthenticationManager authenticationManager;
-    private JwtTokenProvider jwtTokenProvider;
+    private TokenService tokenService;
     private UserRepository userRepository;
 
     @Override
-    public JwtAuthResponse login(LoginDto loginDto) {
+    public UserResponseDto login(LoginDto loginDto) {
         User user = userRepository.findByEmailAndDeletedFalse(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
         if (user == null) {
             throw new RuntimeException("User not found or deleted.");
@@ -34,11 +34,11 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
-        String token = jwtTokenProvider.generateToken(authentication);
+        String token = tokenService.generateToken(authentication);
 
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-        jwtAuthResponse.setAccessToken(token);
-        return jwtAuthResponse;
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setAccessToken(token);
+        return userResponseDto;
     }
 
 
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new RuntimeException("User not found or deleted.");
         }
-        jwtTokenProvider.revokeToken(email,token);
+        tokenService.revokeToken(email,token);
 
     }
 }
