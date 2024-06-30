@@ -23,7 +23,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(ApiPaths.BANKER)
     public ResponseEntity<Void>addBanker(@RequestBody UserRequestDto userRequestDto){

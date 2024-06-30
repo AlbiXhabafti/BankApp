@@ -40,4 +40,18 @@ public class AuthServiceImpl implements AuthService {
         jwtAuthResponse.setAccessToken(token);
         return jwtAuthResponse;
     }
+
+    @Override
+    public void logout(LoginDto loginDto) {
+        User user = userRepository.findByEmailAndDeletedFalse(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+        if (user == null) {
+            throw new RuntimeException("User not found or deleted.");
+        }
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDto.getEmail(),
+                loginDto.getPassword()
+        ));
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+    }
 }

@@ -3,6 +3,7 @@ package com.example.BankingApp.user.contoller;
 import com.example.BankingApp.user.dto.JwtAuthResponse;
 import com.example.BankingApp.user.dto.LoginDto;
 import com.example.BankingApp.user.service.AuthService;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
         logger.info("attempting to logIn with email: {}",loginDto.getEmail());
@@ -32,4 +32,11 @@ public class AuthController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LoginDto loginDto){
+        logger.info("attempting to logout with email: {}",loginDto.getEmail());
+        authService.logout(loginDto);
+        logger.info(" user with logout {} is successfully logIn",loginDto.getEmail());
+        return new ResponseEntity<> (HttpStatus.OK);
+    }
 }
