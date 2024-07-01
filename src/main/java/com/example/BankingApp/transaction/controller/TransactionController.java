@@ -32,7 +32,7 @@ public class TransactionController {
     public ResponseEntity<Void>add(@RequestBody TransactionDto transactionDto, Principal principal){
         logger.info("attempt to add new transaction {}",transactionDto);
         transactionService.add(transactionDto,principal.getName());
-        logger.info("new transaction  is created");
+        logger.info("new transaction  is added");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

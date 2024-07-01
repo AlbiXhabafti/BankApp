@@ -27,14 +27,14 @@ public class UserController {
 
     @PostMapping(ApiPaths.LOGIN)
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginDto loginDto){
-        logger.info("attempting to logIn with email: {}",loginDto.getEmail());
+        logger.info("attempt to logIn with email: {}",loginDto.getEmail());
         var result =  userService.login(loginDto);
         logger.info(" user with email {} is successfully logIn",loginDto.getEmail());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping(ApiPaths.LOGOUT)
     public ResponseEntity<Void> logout(@RequestParam String email,@RequestParam String token){
-        logger.info("attempting to logout with email: {}",email);
+        logger.info("attempting to logout with email: {} and token {}",email,token);
         userService.logout(email,token);
         logger.info(" user with logout {} is successfully logIn",email);
         return new ResponseEntity<> (HttpStatus.OK);
@@ -42,7 +42,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(ApiPaths.BANKER)
     public ResponseEntity<Void>addBanker(@RequestBody UserRequestDto userRequestDto){
-        logger.info("trying to add new banker {}", userRequestDto);
+        logger.info("attempt to add new banker {}", userRequestDto);
         userService.addBanker(userRequestDto);
         logger.info("new banker with email {} is added",userRequestDto.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -50,7 +50,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(ApiPaths.BANKER)
     public ResponseEntity<Void>updateBanker(@RequestParam String email ,@RequestBody UserDto userDto){
-        logger.info("trying to update banker {}", userDto);
+        logger.info("attempt to update banker {}", userDto);
         userService.updateBanker(email,userDto);
         logger.info(" banker with email {} is updated",email);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -58,7 +58,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(ApiPaths.BANKER)
     public ResponseEntity<Void>deleteBanker(@RequestParam String email){
-        logger.info("trying to delete  banker with email {}", email);
+        logger.info("attempt to delete  banker with email {}", email);
         userService.deleteBanker(email);
         logger.info(" banker with email {} is deleted",email);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -67,7 +67,7 @@ public class UserController {
     @PreAuthorize("hasRole('BANKER')")
     @PostMapping(ApiPaths.CLIENT)
     public ResponseEntity<Void>addClient(@RequestBody UserRequestDto userRequestDto){
-        logger.info("trying to add new client {}", userRequestDto);
+        logger.info("attempt to add new client {}", userRequestDto);
         userService.addClient(userRequestDto);
         logger.info("new client with email {} is added",userRequestDto.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -76,7 +76,7 @@ public class UserController {
     @PreAuthorize("hasRole('BANKER')")
     @PutMapping(ApiPaths.CLIENT)
     public ResponseEntity<Void>updateClient(@RequestParam String email ,@RequestBody UserDto userDto){
-        logger.info("trying to update client {}", userDto);
+        logger.info("attempt to update client {}", userDto);
          userService.updateClient(email,userDto);
         logger.info(" client with email {} is updated",email);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -85,7 +85,7 @@ public class UserController {
     @PreAuthorize("hasRole('BANKER')")
     @DeleteMapping(ApiPaths.CLIENT)
     public ResponseEntity<Void>deleteClient(@RequestParam String email){
-        logger.info("trying to delete  client {}", email);
+        logger.info("attempt to delete  client {}", email);
         userService.deleteClient(email);
         logger.info(" client with email {} is deleted",email);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -51,7 +51,7 @@ public class AccountController {
     public ResponseEntity<List<AccountResponseDto>>get(Principal principal){
         logger.info("attempt to get list of accounts  for loggedUser: {} ",principal.getName());
         var result = accountService.get(principal.getName());
-        logger.info("getting lis of accounts {}",result);
+        logger.info("getting list of accounts {}",result);
         return new ResponseEntity<>(result,HttpStatus.OK);
 
     }
