@@ -1,4 +1,4 @@
-package com.example.BankingApp.user.config;
+package com.example.BankingApp.config;
 
 import com.example.BankingApp.user.service.impl.AuthenticationEntryPoint;
 import com.example.BankingApp.user.service.impl.AuthenticationFilter;

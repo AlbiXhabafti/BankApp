@@ -1,4 +1,4 @@
-package com.example.BankingApp.util;
+package com.example.BankingApp.config;
 
 public class ApiPaths {
     public static final String BANKER = "/banker";
