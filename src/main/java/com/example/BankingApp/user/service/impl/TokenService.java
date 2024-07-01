@@ -74,7 +74,4 @@ public class TokenService {
         String storedToken = revokedTokens.get(principal);
         return storedToken != null && storedToken.equals(token);
     }
-    public void removeRevokedToken(String principal) {
-        revokedTokens.remove(principal);
-    }
 }

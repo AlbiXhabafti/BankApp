@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +59,7 @@ public class AccountServiceImplTest {
         account.setCreatedBy(user);
 
         Mockito.when(accountConverter.convertToAccount(accountDto)).thenReturn(account);
-        Mockito.when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         accountService.add(accountDto,email);
         verify(accountRepository, Mockito.times(1)).save(account);

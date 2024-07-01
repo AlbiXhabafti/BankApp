@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepository.findByEmailAndDeletedFalse(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Email"));
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()

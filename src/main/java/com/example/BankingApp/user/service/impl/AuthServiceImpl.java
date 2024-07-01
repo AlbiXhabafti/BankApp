@@ -23,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDto login(LoginDto loginDto) {
-        User user = userRepository.findByEmailAndDeletedFalse(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
         if (user == null) {
             throw new RuntimeException("User not found or deleted.");
         }
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String email,String token) {
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
         if (user == null) {
             throw new RuntimeException("User not found or deleted.");
         }

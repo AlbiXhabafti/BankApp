@@ -142,7 +142,7 @@ public class DebitCardServiceImplTest {
         debitCard.setCreatedBy(user);
 
         Mockito.when(debitCardRepository.findById(id)).thenReturn(Optional.of(debitCard));
-        Mockito.when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         Mockito.when(debitCardRepository.save(any(DebitCard.class))).thenReturn(debitCard);
 
         debitCardService.update(id,approved,null,email);

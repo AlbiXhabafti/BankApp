@@ -29,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void add(AccountDto accountDto,String email) {
         Account account = accountConverter.convertToAccount(accountDto);
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(()-> new NoResultFoundException("account is not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoResultFoundException("account is not found"));
         account.setCreatedBy(user);
         accountRepository.save(account);
     }
@@ -37,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void update(String iban, Boolean approved, String email) {
         Account account = accountRepository.findByIban(iban).orElseThrow(()->new NoResultFoundException("account is not found"));
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
+        User user = userRepository.findByEmail(email).orElse(null);
         account.setApproved(approved);
         account.setModifiedBy(user);
         accountRepository.save(account);

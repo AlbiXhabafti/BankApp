@@ -56,7 +56,7 @@ public class DebitCardServiceImpl implements DebitCardService {
         }else {
             debitCard.setDisapproveReason(null);
         }
-        User user = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
+        User user = userRepository.findByEmail(email).orElse(null);
         debitCard.setModifiedBy(user);
         debitCardRepository.save(debitCard);
     }

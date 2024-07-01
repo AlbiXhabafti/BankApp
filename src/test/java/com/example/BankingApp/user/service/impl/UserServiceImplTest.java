@@ -80,7 +80,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_BANKER);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
 
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(userConverter.convertToUser(user, dto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -96,7 +96,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_CLIENT);
 
         User user = createUser(1, "albi", "xhabafti", email, "password", role);
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         assertThrows(WrongRoleException.class, () -> userService.updateBanker(email,dto));
 
@@ -108,7 +108,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_CLIENT);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
 
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(userConverter.convertToUser(user, dto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -127,7 +127,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_BANKER);
 
         User user = createUser(1, "albi", "xhabafti", email, "password", role);
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         assertThrows(WrongRoleException.class, () -> userService.updateClient(email,dto));
 
@@ -148,7 +148,7 @@ public class UserServiceImplTest {
         String email = "albi@gmail.com";
         Role role = createRole(1, RoleEnum.ROLE_CLIENT);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         doNothing().when(userRepository).delete(user);
 
         userService.deleteClient(email);
@@ -159,7 +159,7 @@ public class UserServiceImplTest {
         String email = "albi@gmail.com";
         Role role = createRole(1, RoleEnum.ROLE_BANKER);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
-        when(userRepository.findByEmailAndDeletedFalse(email)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         doNothing().when(userRepository).delete(user);
 
         userService.deleteBanker(email);
@@ -173,7 +173,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_CLIENT);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
 
-        when(userRepository.findByEmailAndDeletedFalse(anyString())).thenReturn(java.util.Optional.of(user));
+        when(userRepository.findByEmail(anyString())).thenReturn(java.util.Optional.of(user));
         assertThrows(WrongRoleException.class, () -> userService.deleteBanker("banker@gmail.com"));
 
     }
@@ -183,7 +183,7 @@ public class UserServiceImplTest {
         Role role = createRole(1, RoleEnum.ROLE_BANKER);
         User user = createUser(1, "albi", "xhabafti", "albi@gmail.com", "password", role);
 
-        when(userRepository.findByEmailAndDeletedFalse(anyString())).thenReturn(java.util.Optional.of(user));
+        when(userRepository.findByEmail(anyString())).thenReturn(java.util.Optional.of(user));
         assertThrows(WrongRoleException.class, () -> userService.deleteClient("client@gmail.com"));
 
     }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SQLRestriction("deleted = false")
 @SQLDelete(sql = "UPDATE User SET deleted = true WHERE id=?")
 public class User {
 
