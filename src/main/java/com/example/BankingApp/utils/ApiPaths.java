@@ -1,4 +1,4 @@
-package com.example.BankingApp.config;
+package com.example.BankingApp.utils;
 
 public class ApiPaths {
     public static final String BANKER = "/banker";
@@ -8,6 +8,9 @@ public class ApiPaths {
     public static final String REQUEST = "/request";
     public static final String TRANSACTION ="/transaction";
     public static final String USER = "/user";
+    public static final String LOGIN = "/login";
+    public static final String LOGOUT = "/logout";
+
 
 
     public ApiPaths() {

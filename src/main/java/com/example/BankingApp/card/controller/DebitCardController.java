@@ -3,7 +3,7 @@ package com.example.BankingApp.card.controller;
 import com.example.BankingApp.card.dto.DebitCardResponseDto;
 import com.example.BankingApp.card.dto.NewDebitCardDto;
 import com.example.BankingApp.card.service.DebitCardService;
-import com.example.BankingApp.config.ApiPaths;
+import com.example.BankingApp.utils.ApiPaths;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

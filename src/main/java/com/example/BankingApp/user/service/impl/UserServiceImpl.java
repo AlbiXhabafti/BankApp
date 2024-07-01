@@ -3,8 +3,10 @@ package com.example.BankingApp.user.service.impl;
 import com.example.BankingApp.exception.NoResultFoundException;
 import com.example.BankingApp.exception.WrongRoleException;
 import com.example.BankingApp.user.converter.UserConverter;
+import com.example.BankingApp.user.dto.LoginDto;
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
+import com.example.BankingApp.user.dto.UserResponseDto;
 import com.example.BankingApp.user.enums.RoleEnum;
 import com.example.BankingApp.user.model.Role;
 import com.example.BankingApp.user.model.User;
@@ -12,6 +14,10 @@ import com.example.BankingApp.user.repository.RoleRepository;
 import com.example.BankingApp.user.repository.UserRepository;
 import com.example.BankingApp.user.service.UserService;
 import jakarta.persistence.NoResultException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -22,11 +28,43 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserConverter userConverter) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserConverter userConverter, AuthenticationManager authenticationManager, TokenService tokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userConverter = userConverter;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
+
+    @Override
+    public UserResponseDto login(LoginDto loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+        if (user == null) {
+            throw new RuntimeException("User not found or deleted.");
+        }
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDto.getEmail(),
+                loginDto.getPassword()
+        ));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+        String token = tokenService.generateToken(authentication);
+
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setAccessToken(token);
+        return userResponseDto;
+    }
+    @Override
+    public void logout(String email, String token) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoResultFoundException("User not found or deleted."));
+        if (user == null) {
+            throw new RuntimeException("User not found or deleted.");
+        }
+        tokenService.revokeToken(email,token);
     }
 
     @Override

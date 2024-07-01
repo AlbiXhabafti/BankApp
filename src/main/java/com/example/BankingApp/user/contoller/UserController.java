@@ -1,6 +1,8 @@
 package com.example.BankingApp.user.contoller;
 
-import com.example.BankingApp.config.ApiPaths;
+import com.example.BankingApp.user.dto.LoginDto;
+import com.example.BankingApp.user.dto.UserResponseDto;
+import com.example.BankingApp.utils.ApiPaths;
 import com.example.BankingApp.user.dto.UserDto;
 import com.example.BankingApp.user.dto.UserRequestDto;
 import com.example.BankingApp.user.service.UserService;
@@ -11,18 +13,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-@RestController
-@RequestMapping("/user")
 @Slf4j
+@RestController
+@RequestMapping(ApiPaths.USER)
 public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    @PostMapping(ApiPaths.LOGIN)
+    public ResponseEntity<UserResponseDto> login(@RequestBody LoginDto loginDto){
+        logger.info("attempting to logIn with email: {}",loginDto.getEmail());
+        var result =  userService.login(loginDto);
+        logger.info(" user with email {} is successfully logIn",loginDto.getEmail());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @PostMapping(ApiPaths.LOGOUT)
+    public ResponseEntity<Void> logout(@RequestParam String email,@RequestParam String token){
+        logger.info("attempting to logout with email: {}",email);
+        userService.logout(email,token);
+        logger.info(" user with logout {} is successfully logIn",email);
+        return new ResponseEntity<> (HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(ApiPaths.BANKER)
     public ResponseEntity<Void>addBanker(@RequestBody UserRequestDto userRequestDto){

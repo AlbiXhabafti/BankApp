@@ -2,6 +2,7 @@ package com.example.BankingApp.config;
 
 import com.example.BankingApp.user.service.impl.AuthenticationEntryPoint;
 import com.example.BankingApp.user.service.impl.AuthenticationFilter;
+import com.example.BankingApp.utils.ApiPaths;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +33,8 @@ public class SpringSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers(AUTH_WHITELIST).permitAll();
-                    authorize.requestMatchers("/api/auth/*").permitAll();
+                    authorize.requestMatchers(ApiPaths.USER.concat(ApiPaths.LOGIN)).permitAll();
+                    authorize.requestMatchers(ApiPaths.USER.concat(ApiPaths.LOGOUT)).permitAll();
                     authorize.anyRequest().authenticated();
                 })
 
